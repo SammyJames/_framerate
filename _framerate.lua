@@ -38,6 +38,8 @@ function _framerate:OnUpdate()
         self.color = colors.BAD
     elseif ( self.frame_rate < ranges.GOOD ) then
         self.color = colors.OKAY
+    else 
+        self.color = colors.GOOD
     end
 
     self.label:SetText( string.format( 'FPS: %.1f', self.frame_rate ) )
