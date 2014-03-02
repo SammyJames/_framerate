@@ -1,0 +1,16 @@
+<GuiXml>
+    <Controls>
+        <TopLevelControl name="_framerate" mouseEnabled="false" clampedToScreen="true" movable="false">
+            <OnInitialized>Initialized( self )</OnInitialized>
+            <Dimensions x="200" y="20" />
+            <Anchor point="BOTTOMLEFT" offsetX="4" offsetY="-4"/>
+
+            <Controls>
+                <Label name="$(parent)_Label" font="ZoFontGameSmall" horizontalAlignment="LEFT" wrapMode="ELLIPSIS">
+                    <Dimensions x="200" y="20" />
+                    <AnchorFill/>
+                </Label>
+            </Controls>
+        </TopLevelControl>
+    </Controls>
+</GuiXml>
