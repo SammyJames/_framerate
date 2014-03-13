@@ -53,6 +53,7 @@ end
 function _framerate:Initialize( control )
     self.control = control
     self.label = control:GetNamedChild( '_Label' )
+    self.label:SetFont( string.format( '%s|%d|soft-shadow-thin', [[_framerate/DejaVuSansMono.ttf]], 10 ) )
 
     self.control:SetHandler( 'OnUpdate', function() self:OnUpdate() end )
 end
