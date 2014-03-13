@@ -78,4 +78,13 @@ end
 
 function Initialized( self )
     _FRAMERATE = _framerate:New( self )
+
+    ZO_CreateStringId("SI_BINDING_NAME_TOGGLE_FPS", "Toggle _framerate")
+end
+
+function ToggleFramerate()
+    if ( _FRAMERATE ) then
+        local visible = _FRAMERATE.control:IsHidden()
+        _FRAMERATE.control:SetHidden( not visible )
+    end
 end

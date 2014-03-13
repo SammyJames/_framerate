@@ -3,3 +3,4 @@
 
 _framerate.lua
 _framerate.xml
+Bindings.xml

@@ -1,0 +1,9 @@
+<Bindings>
+  <Layer name="General">
+    <Category name="User Interface">
+      <Action name="TOGGLE_FPS">
+        <Down>ToggleFramerate()</Down>
+      </Action>
+    </Category>
+  </Layer>
+</Bindings>
