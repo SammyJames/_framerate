@@ -6,7 +6,7 @@
             <Anchor point="BOTTOMLEFT" offsetX="4" offsetY="-4"/>
 
             <Controls>
-                <Label name="$(parent)_Label" horizontalAlignment="LEFT" wrapMode="ELLIPSIS">
+                <Label name="$(parent)_Label" horizontalAlignment="LEFT" verticalAlignment="BOTTOM" wrapMode="ELLIPSIS">
                     <Dimensions x="200" y="20" />
                     <AnchorFill/>
                 </Label>
