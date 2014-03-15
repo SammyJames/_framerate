@@ -27,22 +27,18 @@ THE SOFTWARE.
 ]]
 -------------------------------------------------
 
-local ranges =
-{
-    OKAY = 30,
-    GOOD = 60
-}
+local CBM = CALLBACK_MANAGER
+local ranges = { okay = 30, good = 60 }   
+local strformat = string.format
 
-local colors = 
-{
-    BAD = { r = 255, g = 0, b = 0 },
-    OKAY = { r = 255, g = 255, b = 0 },
-    GOOD = { r = 0, g = 255, b = 0 }    
-}
+local function clamp( val, min, max )
+    return zo_max( zo_min( val, max ), min )
+end
 
-local _framerate = ZO_Object:Subclass()
-_framerate.color = colors.GOOD
-_framerate.frame_rate = 0
+local _framerate        = ZO_Object:Subclass()
+_framerate.colors       = setmetatable( {}, { __mode = 'kv' } )
+_framerate.frame_rate   = 0
+_framerate.last_time    = 0
 
 function _framerate:New( ... )
     local result = ZO_Object.New( self )
@@ -51,29 +47,54 @@ function _framerate:New( ... )
 end
 
 function _framerate:Initialize( control )
-    self.control = control
-    self.label = control:GetNamedChild( '_Label' )
-    self.label:SetFont( string.format( '%s|%d|soft-shadow-thin', [[_framerate/DejaVuSansMono.ttf]], 10 ) )
+    self.control  = control
+    self.label    = control:GetNamedChild( '_Label' )
 
-    self.control:SetHandler( 'OnUpdate', function() self:OnUpdate() end )
+    self.control:RegisterForEvent( EVENT_ADD_ON_LOADED, function( _, addon ) self:AddonLoaded( addon ) end )
 end
 
-function _framerate:OnUpdate()
+function _framerate:AddonLoaded( addon )
+    if ( addon ~= '_framerate' ) then
+        return
+    end
+
+    CBM:RegisterCallback( '_FRAMERATE_COLORS_CHANGED', function( ... ) self:OnColorsChanged( ... ) end )
+    CBM:RegisterCallback( '_FRAMERATE_FONT_CHANGED', function( ... ) self:OnFontChanged( ... ) end )
+
+    CBM:FireCallbacks( '_FRAMERATE_LOADED' )
+    self.control:SetHandler( 'OnUpdate', function( _, frameTime ) self:OnUpdate( frameTime ) end )
+end
+
+function _framerate:OnColorsChanged( good, okay, bad )
+    self.colors = { bad, okay, good }
+end
+
+function _framerate:OnFontChanged( newFont )
+    self.label:SetFont( newFont )
+end
+
+function _framerate:OnUpdate( frameTime )
+    if ( frameTime - self.last_time < 0.5 ) then
+        return
+    end
+
     if ( GetFramerate() == self.frame_rate ) then
         return
     end
+
+    self.last_time = frameTime
     
     self.frame_rate = GetFramerate()
-    if ( self.frame_rate < ranges.OKAY ) then
-        self.color = colors.BAD
-    elseif ( self.frame_rate < ranges.GOOD ) then
-        self.color = colors.OKAY
-    else 
-        self.color = colors.GOOD
+
+    local level = 1
+    if ( self.frame_rate >= ranges.good ) then
+        level = 3 
+    elseif ( self.frame_rate >= ranges.okay ) then
+        level = 2
     end
 
-    self.label:SetText( string.format( 'FPS: %.1f', self.frame_rate ) )
-    self.label:SetColor( self.color.r, self.color.g, self.color.b )
+    self.label:SetText( strformat( 'FPS: %.1f', self.frame_rate ) )
+    self.label:SetColor( unpack( self.colors[ level ] ) )
 end
 
 function Initialized( self )

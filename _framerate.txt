@@ -1,6 +1,13 @@
 ## Title: _framerate
 ## APIVersion: 100000
+## OptionalDependsOn: LibStub LibMediaProvider-1.0 LibAddonMenu-1.0
+## SavedVariables: FRAMERATE_DB
 
+libs/libstub/libstub.lua
+libs/libmediaprovider-1.0/libmediaprovider-1.0.lua
+libs/libaddonmenu-1.0/libaddonmenu-1.0.lua
+
+_framerateConfig.lua
 _framerate.lua
 _framerate.xml
 Bindings.xml
